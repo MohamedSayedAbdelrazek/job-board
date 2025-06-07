@@ -1,10 +1,8 @@
-
 <x-layout :title="$pageTitle">
-    <h2>Blog</h2>
-    <ul>
         @foreach ($posts as $post )
-            <li>{{$post->title}}</li>
-            <li>{{$post->body}}</li>
+            <div>{{$post->title}}</div>
+            <div>{{$post->body}}</div>
+            <hr>
         @endforeach
-    </ul>
+        {{ $posts->links() }}
 </x-layout>
