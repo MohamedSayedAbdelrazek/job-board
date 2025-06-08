@@ -19,12 +19,14 @@ class PostController extends Controller
 
     public function create()
     {
-        Post::create([
-            'title'=>'Second Post',
-            'body'=>'Second body',
-            'author'=>'Mohamed',
-            'published'=>true
-        ]);
+        // Post::create([
+        //     'title'=>'Second Post',
+        //     'body'=>'Second body',
+        //     'author'=>'Mohamed',
+        //     'published'=>true
+        // ]);
+
+        Post::factory(100)->create();
 
         return redirect()->route('posts.index');
     }
