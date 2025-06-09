@@ -11,6 +11,4 @@ Route::get('/contact',[IndexController::class,'contact'])->name('contact');
 
 //Route::get('jobs',[JobController::class,'index']);
 
-Route::get('/posts',[PostController::class,'index'])->name('posts.index');
-
-Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
+Route::resource('/posts',PostController::class);
