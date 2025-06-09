@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class PostController extends Controller
         //
         // $posts = Post::paginate(3);
         //$posts = Post::simplePaginate(3); // show next & previous
-        $posts=Post::cursorPaginate(3);  // not show the id of the page in the browser but show something complicate to follow 
+        $posts=Post::latest()->cursorPaginate(3); // not show the id of the page in the browser but show something complicate to follow 
         return view('posts.index',['posts'=>$posts,'pageTitle'=>'blog']);
     }
 
@@ -35,29 +35,23 @@ class PostController extends Controller
             return view("posts.create",["pageTitle"=>"Create Post"]);
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-       
-        $request->validate([
-            'title'=>'required',
-            'body'=>'required',
-            'author'=>'required',
-        ],[ // for the error message to save field's names in DB
-            'title.required'=>'Mandatory Field',
-            'body.required'=>'Mandatory Field',
-            'author.required'=>'Mandatory Field'
-        ]);
-print_r($request->all());
+        $post=new Post();
+        $post->title=$request->input('title');
+        $post->body=$request->input('body');
+        $post->author=$request->input('author');
+        $post->published=$request->has('published');
 
+        $post->save();
 
+        return redirect()->route('posts.index')->with('success','Post Created Successfully.');
         // @TODO:
         // @FIXME
         // @NOTE
         // @TODO
         // @LARAVEL
         // @MAGIC
-
-
     }
 
    
