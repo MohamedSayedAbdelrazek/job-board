@@ -34,6 +34,7 @@
              <x-nav-link title="/" href="{{ route('index') }}"  aria-current="page" id=1>Dashboard</x-nav-link>
              <x-nav-link title="about" href="{{ route('about') }}" >About</x-nav-link>
              <x-nav-link title="contact" href="{{ route('contact') }}" >Contact Us</x-nav-link>
+             <x-nav-link title="posts" href="{{ route('posts.index') }}" >Blog</x-nav-link>
             </div>
           </div>
         </div>

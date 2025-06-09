@@ -30,19 +30,34 @@ class PostController extends Controller
         //     'published'=>true
         // ]);
 
-        Post::factory(100)->create();
+        // Post::factory(100)->create();
 
-        return redirect()->route('posts.index');
+            return view("posts.create",["pageTitle"=>"Create Post"]);
     }
 
     public function store(Request $request)
     {
+       
+        $request->validate([
+            'title'=>'required',
+            'body'=>'required',
+            'author'=>'required',
+        ],[ // for the error message to save field's names in DB
+            'title.required'=>'Mandatory Field',
+            'body.required'=>'Mandatory Field',
+            'author.required'=>'Mandatory Field'
+        ]);
+print_r($request->all());
+
+
         // @TODO:
         // @FIXME
         // @NOTE
         // @TODO
         // @LARAVEL
         // @MAGIC
+
+
     }
 
    
