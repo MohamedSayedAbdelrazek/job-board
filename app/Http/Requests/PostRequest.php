@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 class PostRequest extends FormRequest
 {
     /**
@@ -21,8 +22,9 @@ class PostRequest extends FormRequest
      */
     public function rules(): array
     {
+       
         return [
-            'title'=>'bail|required|unique:posts,title',
+            'title'=>['bail','required',Rule::unique('posts')->ignore($this->route('post'))],
             'body'=>'required',
             'author'=>'required'
         ];

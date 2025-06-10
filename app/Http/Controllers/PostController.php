@@ -65,16 +65,31 @@ class PostController extends Controller
     public function edit(string $id)
     {
         //
+        $post=Post::findOrFail($id);
+        
+        return view('posts.edit',['pageTitle'=>"Edit Post: ".$post->title,'post'=>$post]);
     }
 
   
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, string $id)
     {
         //
+        $post=Post::findOrFail($id);
+
+        $post->title=$request->input('title');
+        $post->body=$request->input('body');
+        $post->author=$request->input('author');
+        $post->published=$request->has('published');
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success','Post Updated Successfully.');
     }
 
     public function destroy(string $id)
     {
-        //
+        Post::destroy($id);
+
+        return redirect()->back()->with('success','Post Deleted Successfully.');
     }
 }
