@@ -11,7 +11,7 @@
             <div>
             <a href="{{ route('posts.edit',$post->id) }}" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit</a>
 
-            <form method="POST" action="{{ route('posts.destroy',$post->id) }}">
+            <form method="POST" action="{{ route('posts.destroy',$post->id) }}" onsubmit="return confirm('Are you sure,This cannot be reversed?')">
                 @method('delete')
                 @csrf
                 <input type="submit" value="Delete" class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
