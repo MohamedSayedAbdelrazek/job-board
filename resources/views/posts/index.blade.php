@@ -1,24 +1,48 @@
 <x-layout :title="$pageTitle">
-    @if (session('success'))
-        <div class="text-green-800 px-4 py-2 rounded">{{session('success')}}</div>
-    @endif
-      <a href="{{ route('posts.create') }}" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Post</a>
-</br></br>
-        @foreach ($posts as $post )
-            <div>{{$post->title}}</div>
-            <div>{{$post->author}}</div>
-</br>
-            <div>
-            <a href="{{ route('posts.edit',$post->id) }}" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit</a>
 
-            <form method="POST" action="{{ route('posts.destroy',$post->id) }}" onsubmit="return confirm('Are you sure,This cannot be reversed?')">
-                @method('delete')
-                @csrf
-                <input type="submit" value="Delete" class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
-            </form>
+    @if (session('success'))
+        <div class="mb-4 rounded-md bg-green-100 p-4 text-green-800 border border-green-300 shadow">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="mb-6 flex justify-end">
+        <a href="{{ route('posts.create') }}" 
+           class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2">
+            + Add Post
+        </a>
+    </div>
+
+    <div class="space-y-6">
+        @foreach ($posts as $post)
+            <div class="rounded-lg border border-gray-200 p-6 shadow-sm bg-white">
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">{{ $post->title }}</h2>
+                    <p class="text-sm text-gray-500">Author: {{ $post->author }}</p>
+                </div>
+
+                <div class="flex space-x-4">
+                    <a href="{{ route('posts.edit', $post->id) }}" 
+                       class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2">
+                        Edit
+                    </a>
+
+                    <form method="POST" action="{{ route('posts.destroy', $post->id) }}" 
+                          onsubmit="return confirm('Are you sure? This action cannot be undone.')" class="inline-block">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </div>
-        </br>
-            <hr>
         @endforeach
+    </div>
+
+    <div class="mt-6">
         {{ $posts->links() }}
+    </div>
+
 </x-layout>
