@@ -6,13 +6,14 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PostController;
 
-Route::get('/',[IndexController::class,'index'])->name('index');
-Route::get('/about',[IndexController::class,'about'])->name('about');
-Route::get('/contact',[IndexController::class,'contact'])->name('contact');
 
 //Route::get('jobs',[JobController::class,'index']);
 
-Route::resource('/posts',PostController::class);
+
+//Public Routes
+Route::get('/',[IndexController::class,'index'])->name('index');
+
+Route::get('/contact',[IndexController::class,'contact'])->name('contact');
 
 Route::controller(AuthController::class)->group(function(){
     Route::get('/signup','showSignupForm');
@@ -22,3 +23,14 @@ Route::controller(AuthController::class)->group(function(){
     Route::post('/login', 'login')->name('login');
     Route::post('/logout', 'logout')->name('logout');
 });
+
+
+//Protected Routes
+Route::middleware('auth')->group(function(){
+    Route::resource('/posts',PostController::class);
+});
+
+Route::middleware('onlyMe')->group(function(){
+    Route::get('/about',[IndexController::class,'about'])->name('about');
+});
+

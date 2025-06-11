@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\OnlyMe;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +14,7 @@ return Application::configure(basePath: dirname(path: __DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->alias(["onlyMe"=>OnlyMe::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

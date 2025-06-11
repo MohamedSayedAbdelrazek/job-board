@@ -40,13 +40,14 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials=$request->only('email','password');
-
+        
         if(!Auth::attempt($credentials))
         {
             return redirect()->back()->withErrors([
                 'email'=>"The email or password is incorrect"
             ])->withInput();
         }
+
         return redirect()->route('index');
     }
 
