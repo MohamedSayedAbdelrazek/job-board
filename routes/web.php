@@ -30,10 +30,17 @@ Route::middleware('auth')->group(function(){
 
       //Admin
       route::middleware('role:admin')->group(function(){
-          Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
-          Route::post('/posts',[PostController::class,'store'])->name('posts.store');
           Route::delete('/posts/{id}',[PostController::class,'destroy'])->name('posts.destroy');
       });
+      
+        //Editor, Admin
+   route::middleware('role:editor,admin')->group(function(){
+        Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
+        Route::post('/posts',[PostController::class,'store'])->name('posts.store');
+        Route::get('/posts/{id}/edit',[PostController::class,'edit'])->name('posts.edit');
+        Route::put('/posts/{id}',[PostController::class,'update'])->name('posts.update');
+      });
+
       
     //Viewer, Editor, Admin
     route::middleware('role:viewer,editor,admin')->group(function(){
@@ -41,12 +48,7 @@ Route::middleware('auth')->group(function(){
           Route::get('/posts/{id}',[PostController::class,'show'])->name('posts.show');
     });
   
-   //Editor, Admin
-   route::middleware('role:editor,admin')->group(function(){
-    Route::get('/posts/{id}/edit',[PostController::class,'edit'])->name('posts.edit');
-    Route::put('/posts/{id}',[PostController::class,'update'])->name('posts.update');
-      });
-
+ 
      
    
     

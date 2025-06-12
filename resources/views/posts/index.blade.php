@@ -9,7 +9,14 @@
         </div>
     @endif
 
-    @if ($userRole=='admin')
+    @if (session('fail'))
+        <div class="mb-4 rounded-md bg-red-100 p-4 text-red-800 border border-red-300 shadow">
+            {{ session('fail') }}
+        </div>
+    @endif
+
+
+      @if (in_array($userRole,['admin','editor']))
         <div class="mb-6 flex justify-end">
         <a href="{{ route('posts.create') }}" 
            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2">
@@ -24,7 +31,7 @@
             <div class="rounded-lg border border-gray-200 p-6 shadow-sm bg-white">
                 <div class="mb-4">
                     <h2 class="text-xl font-bold text-gray-800">{{ $post->title }}</h2>
-                    <p class="text-sm text-gray-500">Author: {{ $post->author }}</p>
+                    <p class="text-sm text-gray-500">Author: {{ $post->user->name }}</p>
                 </div>
 
                 <div class="flex space-x-4">

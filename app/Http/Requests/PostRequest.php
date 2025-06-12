@@ -27,7 +27,6 @@ class PostRequest extends FormRequest
             //@MAGIC
             'title'=>['bail','required',Rule::unique('posts')->ignore($this->route('post'))],
             'body'=>'required',
-            'author'=>'required'
         ];
     }
 

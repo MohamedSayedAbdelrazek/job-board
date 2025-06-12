@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -40,9 +41,8 @@ class PostController extends Controller
         $post=new Post();
         $post->title=$request->input('title');
         $post->body=$request->input('body');
-        $post->author=$request->input('author');
         $post->published=$request->has('published');
-
+        $post->user_id=Auth::user()->id;
         $post->save();
 
         return redirect()->route('posts.index')->with('success','Post Created Successfully.');
@@ -67,6 +67,11 @@ class PostController extends Controller
         //
         $post=Post::findOrFail($id);
         
+        if($post->user_id!==Auth::user()->id)
+        {
+            return redirect()->route('posts.index')->with('fail','You Cannot edit posts that are not created by you');
+        }
+
         return view('posts.edit',['pageTitle'=>"Edit Post: ".$post->title,'post'=>$post]);
     }
 
@@ -78,7 +83,6 @@ class PostController extends Controller
 
         $post->title=$request->input('title');
         $post->body=$request->input('body');
-        $post->author=$request->input('author');
         $post->published=$request->has('published');
 
         $post->save();
