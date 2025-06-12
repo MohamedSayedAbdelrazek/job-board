@@ -5,6 +5,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -62,24 +63,15 @@ class PostController extends Controller
     }
 
    
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
-        $post=Post::findOrFail($id);
-        
-        if($post->user_id!==Auth::user()->id)
-        {
-            return redirect()->route('posts.index')->with('fail','You Cannot edit posts that are not created by you');
-        }
-
         return view('posts.edit',['pageTitle'=>"Edit Post: ".$post->title,'post'=>$post]);
     }
 
   
-    public function update(PostRequest $request, string $id)
+    public function update(PostRequest $request, Post $post)
     {
-        //
-        $post=Post::findOrFail($id);
+         //Gate::authorize('update',$post);
 
         $post->title=$request->input('title');
         $post->body=$request->input('body');

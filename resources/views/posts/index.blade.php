@@ -9,13 +9,6 @@
         </div>
     @endif
 
-    @if (session('fail'))
-        <div class="mb-4 rounded-md bg-red-100 p-4 text-red-800 border border-red-300 shadow">
-            {{ session('fail') }}
-        </div>
-    @endif
-
-
       @if (in_array($userRole,['admin','editor']))
         <div class="mb-6 flex justify-end">
         <a href="{{ route('posts.create') }}" 

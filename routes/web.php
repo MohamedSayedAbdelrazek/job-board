@@ -37,10 +37,15 @@ Route::middleware('auth')->group(function(){
    route::middleware('role:editor,admin')->group(function(){
         Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
         Route::post('/posts',[PostController::class,'store'])->name('posts.store');
-        Route::get('/posts/{id}/edit',[PostController::class,'edit'])->name('posts.edit');
-        Route::put('/posts/{id}',[PostController::class,'update'])->name('posts.update');
+
+        route::middleware('can:update,post')->group(function(){
+        Route::get('/posts/{post}/edit',[PostController::class,'edit'])->name('posts.edit');
+        Route::put('/posts/{post}',[PostController::class,'update'])->name('posts.update');
+      });
+       
       });
 
+      
       
     //Viewer, Editor, Admin
     route::middleware('role:viewer,editor,admin')->group(function(){
