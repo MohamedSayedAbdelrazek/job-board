@@ -28,6 +28,13 @@ Route::controller(AuthController::class)->group(function(){
 //Protected Routes
 Route::middleware('auth')->group(function(){
 
+      //Admin
+      route::middleware('role:admin')->group(function(){
+          Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
+          Route::post('/posts',[PostController::class,'store'])->name('posts.store');
+          Route::delete('/posts/{id}',[PostController::class,'destroy'])->name('posts.destroy');
+      });
+      
     //Viewer, Editor, Admin
     route::middleware('role:viewer,editor,admin')->group(function(){
           Route::get('/posts',[PostController::class,'index'])->name('posts.index');
@@ -40,12 +47,7 @@ Route::middleware('auth')->group(function(){
     Route::put('/posts/{id}',[PostController::class,'update'])->name('posts.update');
       });
 
-       //Admin
-      route::middleware('role:admin')->group(function(){
-          Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
-          Route::post('/posts',[PostController::class,'store'])->name('posts.store');
-          Route::delete('/posts/{id}',[PostController::class,'destroy'])->name('posts.destroy');
-      });
+     
    
     
 
