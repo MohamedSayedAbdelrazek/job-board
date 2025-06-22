@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -9,10 +10,17 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        return view('companies.index');
+          $query=Company::latest(); //
+
+        if($request->has("archived")){
+            $query->onlyTrashed();
+        }
+
+        $companies=$query->paginate(10)->onEachSide(1);
+        return view('companies.index',compact('companies'));
     }
 
     /**
