@@ -1,24 +1,34 @@
-*.log
-.DS_Store
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
+# Laravel & PHP
+/vendor
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
-/storage/pail
-/vendor
+/storage/debugbar
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/storage/logs
+.env
+.env.*
 Homestead.json
 Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# System Files
+.DS_Store
 Thumbs.db
+.phpunit.result.cache
+.phpactor.json
+.phpunit.cache
+/.idea
+/.vscode
+/.fleet
+/.zed
+
+# Build tools
+/public/build
+# Ignore any windows-generated paths
+C:\xampp\
+
