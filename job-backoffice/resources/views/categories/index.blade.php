@@ -30,9 +30,6 @@
                                 <a href="{{ route('categories.edit', $category->id) }}" class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold hover:bg-yellow-200 transition">
                                     ✍️ Edit
                                 </a>
-                                <a href="{{ route('categories.show', $category->id) }}" class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold hover:bg-green-200 transition">
-                                    👁️ Show
-                                </a>
                                 <form method="POST" action="{{ route('categories.destroy', $category->id) }}" class="inline-block">
                                     @csrf
                                     @method('DELETE')
