@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -29,6 +30,7 @@ class CompanyController extends Controller
     public function create()
     {
         //
+        return view("companies.create");
     }
 
     /**
@@ -37,6 +39,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         //
+        return "bla";
     }
 
     /**
@@ -45,6 +48,9 @@ class CompanyController extends Controller
     public function show(string $id)
     {
         //
+        $company = Company::findOrFail($id);
+        //$jobApplications=JobApplication::with('user')->whereIn('jobVacancyId',$company->jobVacancies()->pluck('id'))->get();
+        return view('companies.show',compact('company'));
     }
 
     /**
@@ -71,3 +77,7 @@ class CompanyController extends Controller
         //
     }
 }
+
+
+
+
