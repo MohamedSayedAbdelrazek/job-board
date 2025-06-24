@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CompanyCreateRequest;
+use App\Http\Requests\CompanyUpdateRequest;
 use App\Models\Company;
 use App\Models\JobApplication;
 use App\Models\User;
@@ -14,6 +15,8 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public $industries=['Technology','Finance','Healthcare','Education','Manufacturing','Retail','Other'];
+
     public function index(Request $request)
     {
         //
@@ -33,7 +36,7 @@ class CompanyController extends Controller
     public function create()
     {
         //
-        $industries=['Technology','Finance','Healthcare','Education','Manufacturing','Retail','Other'];
+        $industries=$this->industries;
         return view("companies.create",compact('industries'));
     }
 
@@ -88,14 +91,47 @@ class CompanyController extends Controller
     public function edit(string $id)
     {
         //
+        $company=Company::findOrFail($id);
+        $owner=$company->owner;
+        $industries=$this->industries;
+        return view('companies.edit',compact('company','owner','industries'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CompanyUpdateRequest $request, string $id)
     {
         //
+        $validated= $request->validated();
+
+        $company=Company::findOrFail($id);
+
+        $company->update([
+            'name'=> $validated['name'],
+            'address'=>$validated['address'],
+            'industry'=>$validated['industry'],
+            'website'=>$validated['website']
+        ]);
+
+        //Update Owner
+        
+        //Do this because the password might be empty-> that mean owner need to keep it the same 
+        $ownerData=[];
+
+        $ownerData['name']= $validated['owner_name'];
+
+        if($validated['owner_password']) {
+            $ownerData['password']=Hash::make(  $validated['owner_password']);
+        }
+        $company->owner->update($ownerData);
+    
+        if($request->query('redirectToList')==true) {
+                return redirect()->route('companies.show',$id)->with('success','Company Updated Successfully!');
+        }
+
+        return redirect()->route('companies.index')->with('success','Company Updated Successfully!');
+
     }
 
     /**

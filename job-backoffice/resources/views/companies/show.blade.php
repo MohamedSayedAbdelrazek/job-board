@@ -10,6 +10,9 @@
         </div>
     </x-slot>
 
+    {{-- Success Message --}}
+    <x-toast-notification/>
+
     <div class="p-6 bg-gray-50 min-h-screen">
         <div class="mx-auto bg-white shadow-xl rounded-2xl p-6 space-y-6 border border-gray-200 w-full max-w-5xl">
             <!-- Company Header -->
@@ -44,7 +47,7 @@
 
             <!-- Actions -->
             <div class="flex flex-wrap items-center gap-3">
-                <a href="{{ route('companies.edit', $company->id) }}"
+                <a href="{{ route('companies.edit', ['company'=>$company->id,'redirectToList'=>true]) }}"
                     class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition">
                     ✍️ Edit Company
                 </a>
