@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanyCreateRequest;
 use App\Models\Company;
 use App\Models\JobApplication;
+use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -30,16 +33,42 @@ class CompanyController extends Controller
     public function create()
     {
         //
-        return view("companies.create");
+        $industries=['Technology','Finance','Healthcare','Education','Manufacturing','Retail','Other'];
+        return view("companies.create",compact('industries'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CompanyCreateRequest $request)
     {
         //
-        return "bla";
+        $validated= $request->validated();
+        
+        //Create User
+        $owner=User::create([
+            'name'=> $validated['owner_name'],
+            'email'=> $validated['owner_email'],
+            'password'=>Hash::make($validated['owner_password']),
+            'role'=>'company-owner'
+        ]);
+
+        //Return error if owner creation fails
+        if(!$owner) {
+                return redirect()->route('companeis.index')->with('error','Failed to create owner.');
+        }
+
+
+        //Create Company
+        Company::create([
+            'name'=> $validated['name'],
+            'address'=>$validated['address'],
+            'industry'=>$validated['industry'],
+            'website'=>$validated['website'],
+            'ownerId'=>$owner->id
+        ]);
+
+        return redirect()->route('companies.index')->with('success','Company Created Successfully.');
     }
 
     /**

@@ -23,7 +23,7 @@ class JobCategoryCreateRequest extends FormRequest
     {
         return [
             //
-            'name'=>'required|string|max:255|unique:job_categories,name'
+            'name'=>'required|string|max:255|unique:job_categories,name',
         ];
     }
 

@@ -50,7 +50,14 @@
                             <td class="px-6 py-4 text-gray-800 font-medium"><a class="text-blue-500 hover:text-blue-700 underline"  href="{{ route('companies.show',$company->id) }}">{{ $company->name }}</a></td>
                             <td class="px-6 py-4 text-gray-800 font-medium">{{ $company->address }}</td>
                             <td class="px-6 py-4 text-gray-800 font-medium">{{ $company->industry }}</td>
-                            <td class="px-6 py-4 text-gray-800 font-medium"><a target="_blank" href="{{ $company->website }}">{{ $company->website }}</a></td>
+                            <td class="px-6 py-4 text-gray-800 font-medium">
+                                @if ($company->website )
+                                      <a target="_blank" href="{{ $company->website }}">{{ $company->website }}</a>
+                                @else
+                                     <span class="text-gray-500 italic">N/A</span>
+                                @endif
+                              
+                            </td>
                             <td class="px-6 py-4 text-gray-800 font-medium">{{ $company->owner->name }}</td>
                             <td class="px-6 py-4 space-x-2">
                                 @if (request()->input('archived')==true)
