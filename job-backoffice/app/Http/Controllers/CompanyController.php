@@ -140,6 +140,15 @@ class CompanyController extends Controller
     public function destroy(string $id)
     {
         //
+        $company=Company::findOrFail($id);
+        $company->delete();
+        return redirect()->route('companies.index')->with('success','Company Archived Successfully!');
+    }
+
+    public function restore($id) {
+        $company=Company::onlyTrashed()->findOrFail($id);
+        $company->restore();
+        return redirect()->route('companies.index',['archived'=>true])->with('success','Company Restored Successfully!');
     }
 }
 

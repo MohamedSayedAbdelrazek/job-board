@@ -94,6 +94,6 @@ class JobCategoryController extends Controller
         //
         $jobCategory=JobCategory::onlyTrashed()->findOrFail($id);
         $jobCategory->restore();
-        return redirect()->route('categories.index',['archived',true])->with('success','Job Category Restored Successfully!');
+        return redirect()->route('categories.index',['archived'=>true])->with('success','Job Category Restored Successfully!');
     }
 }
