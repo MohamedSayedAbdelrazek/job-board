@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies',CompanyController::class);
     Route::put('companies/{id}/restore',[CompanyController::class,'restore'])->name('companies.restore');
     Route::resource('job-vacancies',JobVacancyController::class);
+        Route::put('job-vacancies/{id}/restore',[JobVacancyController::class,'restore'])->name('companies.restore');
     Route::resource('job-applications',JobApplicationController::class);
     Route::resource('users', UserController::class);
 
