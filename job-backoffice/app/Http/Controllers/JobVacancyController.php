@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobVacanyCreateRequest;
+use App\Models\JobCategory;
+use App\Models\Company;
 use App\Models\JobVacancy;
 use Illuminate\Http\Request;
 
@@ -29,14 +32,24 @@ class JobVacancyController extends Controller
     public function create()
     {
         //
+        $types=['Full-Time','Part-Time','Remote','Hybrid','Contract'];
+        $companies=Company::all();
+        $categories=JobCategory::all();
+        return view('job-vacancies.create',compact('types','companies','categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JobVacanyCreateRequest $request)
     {
         //
+        $validated=$request->validated();
+        //@TODO => Add those fields in the Create-job page, instead of fill it manually
+        $validated['required_skills']='';
+        $validated['view_count']=1;
+        JobVacancy::create($validated);
+        return redirect()->route('job-vacancies.index')->with('success','Job Vacancy Created Successfully');
     }
 
     /**

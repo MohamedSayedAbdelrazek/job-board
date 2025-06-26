@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('location');
             $table->enum('type',['Full-Time','Part-Time','Contract','Remote','Hybrid'])->default('Full-time');
-            $table->decimal('salary',8,2);
+            $table->decimal('salary',8,2); //@TODO => increase the range of salary to avoid errors when create a job with high salary
             $table->text('required_skills');
             $table->integer('view_count');
             $table->timestamps();
