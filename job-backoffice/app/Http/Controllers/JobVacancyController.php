@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\JobVacanyCreateRequest;
+use App\Http\Requests\JobVacancyUpdateRequest;
+use App\Http\Requests\JobVacancyCreateRequest;
 use App\Models\JobCategory;
 use App\Models\Company;
 use App\Models\JobVacancy;
@@ -13,6 +14,7 @@ class JobVacancyController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public $types=['Full-Time','Part-Time','Remote','Hybrid','Contract'];
     public function index(Request $request)
     {
         //
@@ -32,7 +34,7 @@ class JobVacancyController extends Controller
     public function create()
     {
         //
-        $types=['Full-Time','Part-Time','Remote','Hybrid','Contract'];
+        $types=$this->types;
         $companies=Company::all();
         $categories=JobCategory::all();
         return view('job-vacancies.create',compact('types','companies','categories'));
@@ -41,7 +43,7 @@ class JobVacancyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(JobVacanyCreateRequest $request)
+    public function store(JobVacancyCreateRequest $request)
     {
         //
         $validated=$request->validated();
@@ -68,14 +70,28 @@ class JobVacancyController extends Controller
     public function edit(string $id)
     {
         //
+        $types=$this->types;
+        $companies=Company::all();
+        $categories=JobCategory::all();
+        $jobVacancy = JobVacancy::findOrFail($id);
+        return view('job-vacancies.edit',compact('jobVacancy','types','companies','categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobVacancyUpdateRequest $request, string $id)
     {
         //
+        $validated=$request->validated();
+        $jobVacancy = JobVacancy::findOrFail($id);
+        $jobVacancy->update($validated);
+        
+        if($request->query('redirectToList')==true) {
+                return redirect()->route('job-vacancies.show',$id)->with('success','Company Updated Successfully!');
+        }
+        
+        return redirect()->route('job-vacancies.index')->with('success','Job Vacancy Updated Successfully.');
     }
 
     /**
