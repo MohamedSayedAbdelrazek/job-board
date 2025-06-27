@@ -1,6 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center px-4 py-4 bg-white shadow-sm rounded-b-md">
+             <h2 class="text-2xl font-bold text-gray-800">
+                Job Vacancy | {{ $jobVacancy->title }} 
+            </h2>
             <a href="{{ route('job-vacancies.index') }}"
                class="text-sm text-blue-600 hover:underline flex items-center gap-1">
                 ← Back to Job Vacancies

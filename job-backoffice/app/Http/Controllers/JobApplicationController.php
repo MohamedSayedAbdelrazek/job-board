@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobApplicationUpdateRequest;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
 
@@ -22,25 +23,6 @@ class JobApplicationController extends Controller
         return view('job-applications.index',compact('jobApplications'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
@@ -54,14 +36,26 @@ class JobApplicationController extends Controller
     public function edit(string $id)
     {
         //
+        $jobApplication=JobApplication::findOrFail($id);
+        return view('job-applications.edit',compact('jobApplication'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobApplicationUpdateRequest $request, string $id)
     {
         //
+       $jobApplication=JobApplication::findOrFail($id);
+       $jobApplication->update([
+        'status'=> $request->input('status')
+       ]);
+       
+        if($request->query('redirectToList')==true) {
+                return redirect()->route('job-applications.show',$id)->with('success','Company Updated Successfully!');
+        }
+
+       return redirect()->route('job-applications.index')->with('success','Applicant Status Updated Successfully.');
     }
 
     /**
