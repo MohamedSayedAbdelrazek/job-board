@@ -11,12 +11,16 @@ use App\Http\Controllers\JobVacancyController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/',[DashboardController::class,'index'])->name('dashboard');
+
     Route::resource('categories',JobCategoryController::class);
     Route::put('categories/{id}/restore',[JobCategoryController::class,'restore'])->name('categories.restore');
+
     Route::resource('companies',CompanyController::class);
     Route::put('companies/{id}/restore',[CompanyController::class,'restore'])->name('companies.restore');
+
     Route::resource('job-vacancies',JobVacancyController::class);
-        Route::put('job-vacancies/{id}/restore',[JobVacancyController::class,'restore'])->name('companies.restore');
+    Route::put('job-vacancies/{id}/restore',[JobVacancyController::class,'restore'])->name('job-vacancies.restore');
+
     Route::resource('job-applications',JobApplicationController::class);
     Route::resource('users', UserController::class);
 

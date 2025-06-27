@@ -86,7 +86,7 @@ class JobVacancyController extends Controller
         $validated=$request->validated();
         $jobVacancy = JobVacancy::findOrFail($id);
         $jobVacancy->update($validated);
-        
+
         if($request->query('redirectToList')==true) {
                 return redirect()->route('job-vacancies.show',$id)->with('success','Company Updated Successfully!');
         }
@@ -100,5 +100,13 @@ class JobVacancyController extends Controller
     public function destroy(string $id)
     {
         //
+        JobVacancy::findOrFail($id)->delete();
+        return redirect()->route('job-vacancies.index')->with('success','Job Vacancy Archiced Successfully.');
+    }
+
+    public function restore($id) {
+        $jobVacancy=JobVacancy::onlyTrashed()->findOrFail($id);
+        $jobVacancy->restore();
+        return redirect()->route('job-vacancies.index',['archived'=>true])->with('success','Job Vacancy Restored Successfully.');
     }
 }

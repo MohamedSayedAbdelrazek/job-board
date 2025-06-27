@@ -78,7 +78,7 @@
                                    <form method="POST" action="{{ route('job-vacancies.restore', $job->id) }}" class="inline-block">
                                     @csrf
                                     @method('put')
-                                    <button type="submit" onclick="return confirm('Are you sure you want to restore this category?')" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold hover:bg-green-200 transition">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to restore this  Job Vacancy?')" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold hover:bg-green-200 transition">
                                         🔄 Restore
                                     </button>
 
