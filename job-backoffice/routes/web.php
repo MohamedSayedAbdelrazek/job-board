@@ -22,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::put('job-vacancies/{id}/restore',[JobVacancyController::class,'restore'])->name('job-vacancies.restore');
 
     Route::resource('job-applications',JobApplicationController::class);
+    Route::put('job-applications/{id}/restore',[JobApplicationController::class,'restore'])->name('job-applications.restore');
+    
     Route::resource('users', UserController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
