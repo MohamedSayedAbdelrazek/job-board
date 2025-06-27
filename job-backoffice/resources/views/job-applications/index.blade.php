@@ -71,9 +71,23 @@
                                      <span class="text-gray-500 italic">N/A</span>
                                 @endif
                             </td>
+                    
+                        @php
+                         $statusColor = match($jobApplication->status) {
+                            'Pending' => 'bg-yellow-100 text-yellow-800',
+                            'Accepted' => 'bg-green-100 text-green-800',
+                            'Rejected' => 'bg-red-100 text-red-800',
+                            default => 'bg-gray-100 text-gray-800'
+                             };
+                        @endphp
 
-                            <td class="px-6 py-4 text-gray-800 font-medium">{{ $jobApplication->status }}</td>
-                            
+                        
+                            <td class="px-4 py-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColor }}">
+                                    {{ $jobApplication->status }}
+                                </span>
+                            </td>
+                        
                             <td class="px-6 py-4 space-x-2">
                                 @if (request()->input('archived')==true)
 
