@@ -49,7 +49,7 @@ class JobVacancyController extends Controller
         $validated=$request->validated();
         //@TODO => Add those fields in the Create-job page, instead of fill it manually
         $validated['required_skills']='';
-        $validated['view_count']=1;
+        $validated['view_count']=0;
         JobVacancy::create($validated);
         return redirect()->route('job-vacancies.index')->with('success','Job Vacancy Created Successfully');
     }
