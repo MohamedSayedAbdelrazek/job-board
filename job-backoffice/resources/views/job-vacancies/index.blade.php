@@ -39,7 +39,10 @@
                 <thead class="bg-gradient-to-r from-indigo-500 to-blue-500 text-black">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Job Title</th>
-                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Company</th> 
+                        @if (auth()->user()->role=='admin')
+                             <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Company</th> 
+                        @endif
+                        
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Location</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Type</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Salary</th>
@@ -57,15 +60,15 @@
                                     <a class="text-blue-500 hover:text-blue-700 underline"  href="{{ route('job-vacancies.show',$job->id) }}">{{ $job->title }}</a>
                                 @endif
                             </td>
-                            
+                            @if (auth()->user()->role=='admin')
                               <td class="px-6 py-4 text-gray-800 font-medium">
                                 @if ($job->company->name)
                                       <a target="_blank" href="{{ route('companies.show',$job->company->id)}}">{{$job->company->name }}</a>
                                 @else
                                      <span class="text-gray-500 italic">N/A</span>
                                 @endif
-                            </td>
-
+                                </td>
+                            @endif
                             <td class="px-6 py-4 text-gray-800 font-medium">{{ $job->location }}</td>
                             <td class="px-6 py-4 text-gray-800 font-medium">{{ $job->type }}</td>
                                                                                 {{--@MAGIC --}}

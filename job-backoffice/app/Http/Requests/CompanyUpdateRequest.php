@@ -11,6 +11,7 @@ class CompanyUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        
         return true;
     }
 
@@ -21,9 +22,11 @@ class CompanyUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+            $companyId = $this->route('company') ?? auth()->user()->company->id;
+
         return [
             //
-            "name" => "required|string|max:255|unique:companies,name,".$this->route('company'),
+            "name" => "required|string|max:255|unique:companies,name,".$companyId,
             "address" => "required|string|max:255",
             "industry" => "required|string|max:255",
             "website" => "nullable|string|url|max:255",

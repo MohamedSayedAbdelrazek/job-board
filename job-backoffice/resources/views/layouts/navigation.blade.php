@@ -13,25 +13,37 @@
             {{ __('Dashboard') }}
         </x-nav-link>
 
+        @if (auth()->user()->role=='admin')
         <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')">
             {{ __('Companies') }}
         </x-nav-link>
+        @endif
+
+        @if (auth()->user()->role=='company-owner')
+            <x-nav-link :href="route('my-company.show')" :active="request()->routeIs('my-company.*')">
+            {{ __('My Company') }}
+        </x-nav-link>
+        @endif
 
         <x-nav-link :href="route('job-applications.index')" :active="request()->routeIs('job-applications.*')">
             {{ __('Job Applications') }}
         </x-nav-link>
 
+         @if (auth()->user()->role=='admin')
         <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
             {{ __('Job Categories') }}
         </x-nav-link>
+         @endif
 
         <x-nav-link :href="route('job-vacancies.index')" :active="request()->routeIs('job-vacancies.*')">
             {{ __('Job Vacancies') }}
         </x-nav-link>
 
+        @if (auth()->user()->role=='admin')
         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
             {{ __('Users') }}
         </x-nav-link>
+        @endif
         <hr />
         <!-- Logout -->
         <form method="POST" action="{{ route('logout') }}" class="mt-4">

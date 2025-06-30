@@ -34,7 +34,9 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Applicant Name</th>
                          <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Position (Job Vacancy)</th> 
-                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Company </th>
+                         @if (auth()->user()->role=='admin')
+                            <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Company </th>
+                         @endif
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold uppercase">Actions</th>
                     </tr>
@@ -63,7 +65,7 @@
                                 @endif
                             </td>
 
-
+                            @if (auth()->user()->role=='admin')
                             <td class="px-6 py-4 text-gray-800 font-medium">
                                 @if ($jobApplication->jobVacancy->company->name)
                                       <a target="_blank" href="{{ route('companies.show',$jobApplication->jobVacancy->company->id)}}">{{$jobApplication->jobVacancy->company->name }}</a>
@@ -71,7 +73,7 @@
                                      <span class="text-gray-500 italic">N/A</span>
                                 @endif
                             </td>
-                    
+                            @endif
                         @php
                          $statusColor = match($jobApplication->status) {
                             'Pending' => 'bg-yellow-100 text-yellow-800',

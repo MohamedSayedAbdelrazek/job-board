@@ -1,20 +1,39 @@
+@php
+    if(auth()->user()->role=='admin')
+        $formAction= route('companies.update', ['company'=>$company->id,'redirectToList'=>request('redirectToList')]);
+    else
+        $formAction= route('my-company.update');
+    
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center px-4 py-4 bg-white shadow-sm rounded-b-md">
             <h2 class="text-xl font-semibold text-gray-800">
                 Edit Company - {{ $company->name }}
             </h2>
-            <a href="{{ route('companies.index') }}"
+
+            @if (auth()->user()->role=='company-owner')
+            <a href="{{ route('my-company.show') }}"
+                class="text-sm text-blue-600 hover:underline flex items-center gap-1">
+                 Cancel
+            </a>
+            @else
+                <a href="{{ route('companies.index') }}"
                 class="text-sm text-blue-600 hover:underline flex items-center gap-1">
                 ← Back to Companies
-            </a>
+                </a>
+            @endif
+            
+            
+
         </div>
     </x-slot>
 
     <div class="py-10 px-4 bg-gray-50 min-h-screen">
         <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg">
 
-            <form action="{{ route('companies.update', ['company'=>$company->id,'redirectToList'=>request('redirectToList')]) }}" method="POST" class="space-y-10">
+            <form action="{{$formAction}}" method="POST" class="space-y-10">
                 @csrf
                 @method('put')
                 {{-- Company Details --}}

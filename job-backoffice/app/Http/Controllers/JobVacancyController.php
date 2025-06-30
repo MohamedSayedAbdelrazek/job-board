@@ -20,6 +20,9 @@ class JobVacancyController extends Controller
         //
         $query=JobVacancy::latest();
         
+        if(auth()->user()->role=='company-owner') 
+            $query->where('companyId',auth()->user()->company->id);
+        
         if( $request->has("archived") ) {
             $query->onlyTrashed();
         }

@@ -47,16 +47,20 @@
                     <thead>
                         <tr class="text-left">
                             <th class="py-2 uppercase text-gray-500">📌 Job Title</th>
-                            <th class="py-2 uppercase text-gray-500">🏢 Company</th>
+                            @if (auth()->user()->role=='admin')
+                                <th class="py-2 uppercase text-gray-500">🏢 Company</th>
+                            @endif
                             <th class="py-2 uppercase text-gray-500">📈 Total Applications</th>
                         </tr>
                     </thead>
 
                     <tbody class="divide-y divide-gray-200">
-                        @foreach ($mostAppliedJobs as $job )
+                        @foreach ($analytics['mostAppliedJobs'] as $job )
                             <tr class="text-left">
                                 <td class="py-4"><a title="View job details" target="_blank" href="{{ route('job-vacancies.show',$job->id) }}" class="text-blue-500 hover:text-blue-700 underline" >{{ $job->title }}</a></td>
-                                <td class="py-4" ><a title="View company details"  target="_blank" href="{{ route('companies.show',$job->company->id) }}" class="text-blue-500 hover:text-blue-700 underline" >{{$job->company->name}}</a></td>
+                                @if (auth()->user()->role=='admin')
+                                    <td class="py-4" ><a title="View company details"  target="_blank" href="{{ route('companies.show',$job->company->id) }}" class="text-blue-500 hover:text-blue-700 underline" >{{$job->company->name}}</a></td>
+                                @endif
                                 <td class="py-4">{{$job->totalCount}}</td>
                             </tr>
                         @endforeach
@@ -81,7 +85,7 @@
                     </thead>
 
                     <tbody class="divide-y divide-gray-200">
-                        @foreach ($conversionRates as $conversionRate )
+                        @foreach ( $analytics['conversionRates'] as $conversionRate )
                             <tr class="text-left">
                                 <td class="py-4"> <a title="View job details" target="_blank" href="{{ route('job-vacancies.show',$conversionRate->id) }}" class="text-blue-500 hover:text-blue-700 underline" >{{ $conversionRate->title }}</a></td>
                                 <td class="py-4">{{ $conversionRate->view_count }}</td>

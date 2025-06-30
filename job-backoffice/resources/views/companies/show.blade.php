@@ -4,9 +4,12 @@
             <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
                 📁 <span>{{ $company->name }}</span>
             </h2>
-            <a href="{{ route('companies.index') }}" class="text-sm text-blue-600 hover:underline">
-                ← Back to Companies
-            </a>
+            @if (auth()->user()->role=='admin')
+                <a href="{{ route('companies.index') }}" class="text-sm text-blue-600 hover:underline">
+                    ← Back to Companies
+                </a>
+            @endif
+           
         </div>
     </x-slot>
 
@@ -47,23 +50,34 @@
 
             <!-- Actions -->
             <div class="flex flex-wrap items-center gap-3">
-                <a href="{{ route('companies.edit', ['company'=>$company->id,'redirectToList'=>true]) }}"
-                    class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition">
-                    ✍️ Edit Company
-                </a>
-
-                <form method="POST" action="{{ route('companies.destroy', $company->id) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        onclick="return confirm('Are you sure you want to archive this company?')"
-                        class="bg-red-100 text-red-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-red-200 transition">
-                        🗃️ Archive
-                    </button>
-                </form>
+                @if (auth()->user()->role=='admin')
+                    <a href="{{ route('companies.edit', ['company'=>$company->id,'redirectToList'=>true]) }}"
+                        class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition">
+                        ✍️ Edit Company
+                    </a>
+                @else
+                    <a href="{{ route('my-company.edit') }}"
+                        class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-200 transition">
+                        ✍️ Edit Company
+                    </a>
+                @endif
+                
+                @if (auth()->user()->role=='admin')
+                     <form method="POST" action="{{ route('companies.destroy', $company->id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            onclick="return confirm('Are you sure you want to archive this company?')"
+                            class="bg-red-100 text-red-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-red-200 transition">
+                            🗃️ Archive
+                        </button>
+                    </form>
+                @endif
+               
             </div>
 
-            <!-- Tabs -->
+            @if (auth()->user()->role=='admin')
+                <!-- Tabs -->
             <div class="border-t pt-4">
                 <ul class="flex gap-3">
                     <li>
@@ -145,6 +159,8 @@
                     </div>
                 @endif
             </div>
+            @endif
+            
         </div>
     </div>
 </x-app-layout>
