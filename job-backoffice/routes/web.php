@@ -9,27 +9,27 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobCategoryController;
 use App\Http\Controllers\JobVacancyController;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/',[DashboardController::class,'index'])->name('dashboard');
+Route::middleware(['auth', 'role:admin,company-owner'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('categories',JobCategoryController::class);
-    Route::put('categories/{id}/restore',[JobCategoryController::class,'restore'])->name('categories.restore');
+    Route::resource('categories', JobCategoryController::class);
+    Route::put('categories/{id}/restore', [JobCategoryController::class, 'restore'])->name('categories.restore');
 
-    Route::resource('companies',CompanyController::class);
-    Route::put('companies/{id}/restore',[CompanyController::class,'restore'])->name('companies.restore');
+    Route::resource('companies', CompanyController::class);
+    Route::put('companies/{id}/restore', [CompanyController::class, 'restore'])->name('companies.restore');
 
-    Route::resource('job-vacancies',JobVacancyController::class);
-    Route::put('job-vacancies/{id}/restore',[JobVacancyController::class,'restore'])->name('job-vacancies.restore');
+    Route::resource('job-vacancies', JobVacancyController::class);
+    Route::put('job-vacancies/{id}/restore', [JobVacancyController::class, 'restore'])->name('job-vacancies.restore');
 
-    Route::resource('job-applications',JobApplicationController::class);
-    Route::put('job-applications/{id}/restore',[JobApplicationController::class,'restore'])->name('job-applications.restore');
-    
+    Route::resource('job-applications', JobApplicationController::class);
+    Route::put('job-applications/{id}/restore', [JobApplicationController::class, 'restore'])->name('job-applications.restore');
+
     Route::resource('users', UserController::class);
-    Route::put('users/{id}/restore',[UserController::class,'restore'])->name('users.restore');
+    Route::put('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
