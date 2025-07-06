@@ -35,19 +35,28 @@
             <!-- Search & Filters -->
             <div class="bg-gray-900 rounded-xl shadow-lg p-6 mb-8 border border-gray-800">
                 <div class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
-                    <!-- Search Bar -->
-                    <form action="" class="relative w-full md:w-1/3">
+                    <!-- Search Bar                                        @MAGIC -->                          
+                    <form action="{{ route('dashboard') }}" method="get" class="relative w-full md:w-1/3">
                         <div class="flex">
-                            <input type="text" 
+                            <input type="text" name="search" value="{{ request('search') }}"
                                    class="w-full p-3 rounded-l-lg bg-gray-800 text-white border border-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200 placeholder-gray-400"
                                    placeholder="Search jobs, companies...">
-                            <button type="submit"
+
+                                    <button type="submit"
                                     class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 rounded-r-lg border border-indigo-500 hover:from-indigo-600 hover:to-purple-700 transition duration-200 flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                                 <span class="ml-2">Search</span>
                             </button>
+
+                            @if (request()->has('filter'))
+                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                            @endif
+                           
+                            @if (request()->has('search'))
+                                 <a href="{{ route('dashboard',['filter'=>request('filter')]) }}" class=" text-white p-2 rounded-lg">Clear</a>
+                            @endif
                         </div>
                     </form>
 
@@ -59,10 +68,18 @@
                             </svg>
                             Filters
                         </a>
-                        <a href="#" class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Full-Time</a>
-                        <a href="#" class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Remote</a>
-                        <a href="#" class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Hybrid</a>
-                        <a href="#" class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Contract</a>
+                        <a href="{{ route('dashboard',['filter'=>'Full-Time','search'=>request('search')]) }}"
+                         class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Full-Time</a>
+                        <a href="{{ route('dashboard',['filter'=>'Remote','search'=>request('search')]) }}" 
+                        class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Remote</a>
+                        <a href="{{ route('dashboard',['filter'=>'Hybrid','search'=>request('search')]) }}" 
+                        class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Hybrid</a>
+                        <a href="{{ route('dashboard',['filter'=>'Contract','search'=>request('search')]) }}" 
+                        class="px-4 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/20 transition duration-200">Contract</a>
+
+                        @if(request('filter'))
+                            <a href="{{ route('dashboard',['search'=>request('search')]) }}" class=" text-white p-2 rounded-lg">Clear</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -77,7 +94,7 @@
                 </div>
 
                 <div class="divide-y divide-gray-800">
-                    @foreach ($jobs as $job)
+                    @forelse ($jobs as $job)
                     <div class="p-6 hover:bg-gray-800/50 transition duration-200 group">
                         <div class="flex flex-col md:flex-row md:items-center justify-between">
                             <div class="flex items-start space-x-4">
@@ -124,8 +141,11 @@
                                 </span>
                             </div>
                         </div>
+                       
                     </div>
-                    @endforeach
+                    @empty
+                        <p class="text-white text-2xl font-bold">No Jobs Found!</p>
+                    @endforelse
                 </div>
 
                 <!-- Pagination -->
