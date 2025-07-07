@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a href="#" class="text-xl font-semibold text-white group-hover:text-indigo-400 transition duration-200">{{ $job->title }}</a>
+                                    <a href="{{ route('job-vacancies.show',$job->id) }}" class="text-xl font-semibold text-white group-hover:text-indigo-400 transition duration-200">{{ $job->title }}</a>
                                     <div class="flex flex-wrap items-center mt-1 text-sm text-gray-300 space-x-4">
                                         <span class="flex items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
