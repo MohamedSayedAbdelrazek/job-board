@@ -37,7 +37,7 @@
                     </h3>
                 </div>
 
-                <div class="p-6">
+                <div class="p-6">                                                                                                                     <!--@MAGIC-->                          
                     <form action="{{ route('job-vacancies.process-application',$jobVacancy->id) }}" method="post" class="space-y-6" enctype="multipart/form-data">
                         @csrf
 
