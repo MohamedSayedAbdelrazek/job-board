@@ -5,9 +5,17 @@ use App\Http\Requests\ApplyJobRequest;
 use App\Models\JobApplication;
 use App\Models\JobVacancy;
 use App\Models\Resume;
+use App\Services\ResumeAnalysisService;
 class JobVacancyController extends Controller
 {
     //
+    protected $resumeAnalysisService;
+    
+    //@MAGIC implement Dependency injection
+    public function __construct(ResumeAnalysisService $resumeAnalysisService) 
+    {
+        $this->resumeAnalysisService=$resumeAnalysisService;
+    }
     public function show(string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
@@ -36,16 +44,10 @@ class JobVacancyController extends Controller
         //Store in laravel cloud
         $path=$file->storeAs('resumes',$fileName,'cloud');
 
-        //$fileUrl=config('filesystems.disks.cloud.url').'/'.$path;
+        $fileUrl=config('filesystems.disks.cloud.url').'/'.$path;
 
         //TODO Extract information from the resume
-        $extractedInfo=[
-            'summary'=>'',
-            'skills'=>'',
-            'experience'=>'',
-            'education'=>''
-        ];
-
+        $extractedInfo=$this->resumeAnalysisService->extractResumeInformation(fileUrl: $fileUrl);
         
         $resume=Resume::create([
             'fileName'=>$originalFileName,

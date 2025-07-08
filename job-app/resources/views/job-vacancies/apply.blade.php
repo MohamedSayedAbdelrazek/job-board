@@ -111,14 +111,14 @@
                                                    name="resume_file" 
                                                    id="new_resume_file" 
                                                    class="hidden" 
-                                                   accept=".pdf,.doc,.docx">
+                                                   accept=".pdf">
                                             
                                             <div x-show="!fileName" class="space-y-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                                 </svg>
                                                 <p class="text-gray-400">Drag and drop your file here or click to browse</p>
-                                                <p class="text-xs text-gray-500">PDF, DOC, DOCX (Max 5MB)</p>
+                                                <p class="text-xs text-gray-500">PDF (Max 5MB)</p>
                                             </div>
                                             
                                             <div x-show="fileName" class="space-y-2">

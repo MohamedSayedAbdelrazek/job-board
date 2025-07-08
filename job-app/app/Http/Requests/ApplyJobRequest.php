@@ -21,7 +21,7 @@ class ApplyJobRequest extends FormRequest
     {
         return [
             'resume_option'=>'required|string',
-            'resume_file'=>'required_if:resume_option,new_resume|file|mimes:pdf,doc,docx|max:5120'
+            'resume_file'=>'required_if:resume_option,new_resume|file|mimes:pdf|max:5120'
         ];
         
     }
