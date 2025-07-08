@@ -73,12 +73,31 @@
                             <!-- Existing Resumes -->
                             <div class="mb-6">
                                 <x-input-label for="resume" value="Select from your existing resumes:" />
-                            <!--@TODO-->
+                                <div class="space-y-4">
+                                    @forelse ($resumes as $resume )
+                                        <div class="flex items-center gap-2">
+                                          
+                                            <input type="radio" name="resume_option" id="{{ $resume->id }}" value="{{ $resume->id }}"
+                                            @error('resume_option') class="border-red-500" @else class="border-gray-600" @enderror/>
+                                            <x-input-label for="existing_{{ $resume->id }}" class="text-white cursor-pointer">
+                                                {{$resume->fileName}}                                                      <!--@MAGIC-->
+                                                <span class="text-gray-400 text-sm">(Last updated: {{ $resume->updated_at->format('M d,Y') }} )</span>
+                                            </x-input-label>
+                                        </div>
+                                        @empty
+                                            <span class="text-gray-400 text-sm">No resumes found.</span>
+                                    @endforelse
+                                </div>
                             </div>
 
                             <!-- Upload New Resume -->
                             <div x-data="{ fileName: '', hasError: {{ $errors->has('resume_file') ? 'true' : 'false' }} }">
-                                <x-input-label for="new_resume_file" value="Or upload a new resume:" />
+                                <div class="flex items-centerj gap-2">
+                                    <input x-ref="newResumeRadio" type="radio" name="resume_option" id="new_resume" value="new_resume"
+                                    @error('resume_option') class="border-red-500" @else class="border-gray-600" @enderror/>
+                                    <x-input-label class="text-white cursor-pointer" for="new_resume" value=" upload a new resume:" />
+                                </div>
+                                 
                                 <div class="mt-2">
                                     <label for="new_resume_file" class="block cursor-pointer">
                                         <div class="border-2 border-dashed rounded-lg p-6 text-center transition"
@@ -87,7 +106,7 @@
                                                 'border-gray-600 hover:border-indigo-400': !fileName && !hasError,
                                                 'border-red-500': hasError
                                             }">
-                                            <input @change="fileName = $event.target.files[0]?.name || ''; hasError = false" 
+                                            <input @change="fileName = $event.target.files[0]?.name; $refs.newResumeRadio.checked=true || ''; hasError = false" 
                                                    type="file" 
                                                    name="resume_file" 
                                                    id="new_resume_file" 

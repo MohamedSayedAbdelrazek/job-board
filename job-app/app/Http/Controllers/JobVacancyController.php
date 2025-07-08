@@ -18,11 +18,16 @@ class JobVacancyController extends Controller
     public function apply(string $id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
-        return view('job-vacancies.apply', compact('jobVacancy'));
+        $resumes=auth()->user()->resumes;
+        return view('job-vacancies.apply', compact('jobVacancy','resumes'));
     }
 
     public function processApplication(ApplyJobRequest $request, string $id)
     {
+        $extractedInfo=null;
+        $resumeId=null;
+        if($request->input('resume_option')==='new_resume') 
+        {
         $file=$request->file('resume_file');
         $extension=$file->getClientOriginalExtension();
         $originalFileName=$file->getClientOriginalName();
@@ -33,6 +38,15 @@ class JobVacancyController extends Controller
 
         //$fileUrl=config('filesystems.disks.cloud.url').'/'.$path;
 
+        //TODO Extract information from the resume
+        $extractedInfo=[
+            'summary'=>'',
+            'skills'=>'',
+            'experience'=>'',
+            'education'=>''
+        ];
+
+        
         $resume=Resume::create([
             'fileName'=>$originalFileName,
             'fileUri'=>$path,
@@ -42,16 +56,35 @@ class JobVacancyController extends Controller
                 'name'=>auth()->user()->name,
                 'email'=>auth()->user()->email
             ]),
-            'summary'=>'',
-            'skills'=>'',
-            'experience'=>'',
-            'education'=>''
+            'summary'=>$extractedInfo['summary'],
+            'skills'=>$extractedInfo['skills'],
+            'experience'=>$extractedInfo['experience'],
+            'education'=>$extractedInfo['education']
         ]);
+        $resumeId=$resume->id;
+      
+        }
+        else 
+        {
+            $resumeId=$request->input('resume_option');
+            $resume=Resume::findOrFail($resumeId);
 
-        JobApplication::create([
+            $extractedInfo=[
+            'summary'=>$request->summary,
+            'skills'=>$request->skills,
+            'experience'=>$request->experience,
+            'education'=>$request->education
+            ];
+
+        }
+
+        //TODO Evaluate Job Application
+
+
+          JobApplication::create([
             'status'=>'pending',
             'jobVacancyId'=>$id,
-            'resumeId'=>$resume->id,
+            'resumeId'=>$resumeId,
             'userId'=>auth()->id(),
             'aiGeneratedScore'=>0,
             'aiGeneratedFeedback'=>0
