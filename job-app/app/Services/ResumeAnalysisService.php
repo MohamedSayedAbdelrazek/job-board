@@ -12,72 +12,135 @@ class ResumeAnalysisService
 {
     public function extractResumeInformation(string $fileUrl)
     {
-        try{
-        // Extract raw text from the resume PDF file
-        $rawText = $this->extractTextFromPdf($fileUrl);
-        Log::debug('Successfully extracted text from pdf file, size: ' . strlen($rawText) . ' characters');
+        try {
+            // Extract raw text from the resume PDF file
+            $rawText = $this->extractTextFromPdf($fileUrl);
+            Log::debug('Successfully extracted text from pdf file, size: ' . strlen($rawText) . ' characters');
 
-        // Use OpenRouter API to organize the text into a structured format
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
-        ])->post('https://openrouter.ai/api/v1/chat/completions', [
-            'model' => 'mistralai/mistral-7b-instruct',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => "You are a precise resume parser. Extract information exactly as it appears in the resume without adding any interpretation or extra information. The output should be in JSON format."
-                ],
-                [
-                    'role' => 'user',
-                    'content' => "Parse the following resume content and extract the information as a JSON object with the exact keys: 'summary', 'skills', 'experience', 'education'. The resume content is: {$rawText}. Return an empty string for any key that is not found."
-                ]
-            ],
-            'temperature' => 0.1
-        ]);
+            // Use OpenRouter API to organize the text into a structured format
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+            ])->post('https://openrouter.ai/api/v1/chat/completions', [
+                        'model' => 'mistralai/mistral-7b-instruct',
+                        'messages' => [
+                            [
+                                'role' => 'system',
+                                'content' => "You are a precise resume parser. Extract information exactly as it appears in the resume without adding any interpretation or extra information. The output should be in JSON format."
+                            ],
+                            [
+                                'role' => 'user',
+                                'content' => "Parse the following resume content and extract the information as a JSON object with the exact keys: 'summary', 'skills', 'experience', 'education'. The resume content is: {$rawText}. Return an empty string for any key that is not found."
+                            ]
+                        ],
+                        'temperature' => 0.1
+                    ]);
 
-        // Check if request was successful
-        if (!$response->ok()) {
-            Log::error('OpenRouter API request failed: ' . $response->body());
-            throw new \Exception('Failed to connect to OpenRouter API');
-        }
+            // Check if request was successful
+            if (!$response->ok()) {
+                Log::error('OpenRouter API request failed: ' . $response->body());
+                throw new \Exception('Failed to connect to OpenRouter API');
+            }
 
-        $result = $response['choices'][0]['message']['content'] ?? '';
-        Log::debug("OpenRouter response: " . $result);
+            $result = $response['choices'][0]['message']['content'] ?? '';
+            Log::debug("OpenRouter response: " . $result);
 
-        // Parse JSON output
-        $parsedResult = json_decode($result, true);
+            // Parse JSON output
+            $parsedResult = json_decode($result, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            Log::error('Failed to parse OpenRouter response: ' . json_last_error_msg());
-            throw new \Exception('Failed to parse OpenRouter response');
-        }
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error('Failed to parse OpenRouter response: ' . json_last_error_msg());
+                throw new \Exception('Failed to parse OpenRouter response');
+            }
 
-        // Validate required keys
-        $requiredKeys = ['summary', 'skills', 'experience', 'education'];
-        $missingKeys = array_diff($requiredKeys, array_keys($parsedResult));
+            // Validate required keys
+            $requiredKeys = ['summary', 'skills', 'experience', 'education'];
+            $missingKeys = array_diff($requiredKeys, array_keys($parsedResult));
 
-        if (count($missingKeys) > 0) {
-            Log::error('Missing required keys: ' . implode(', ', $missingKeys));
-            throw new \Exception('Missing required keys in the parsed result');
-        }
+            if (count($missingKeys) > 0) {
+                Log::error('Missing required keys: ' . implode(', ', $missingKeys));
+                throw new \Exception('Missing required keys in the parsed result');
+            }
 
-        return [
-            'summary' => $parsedResult['summary'] ?? '',
-            'skills' => $parsedResult['skills'] ?? '',
-            'experience' => $parsedResult['experience'] ?? '',
-            'education' => $parsedResult['education'] ?? ''
-        ];
-        } catch(\Exception $e) {
-            Log::error("Error Extracting Resume Information".$e->getMessage());
-              return [
-            'summary' =>'',
-            'skills' => '',
-            'experience' => '',
-            'education' => ''
-        ];
+            return [
+                'summary' => $parsedResult['summary'] ?? '',
+                'skills' => $parsedResult['skills'] ?? '',
+                'experience' => $parsedResult['experience'] ?? '',
+                'education' => $parsedResult['education'] ?? ''
+            ];
+        } catch (\Exception $e) {
+            Log::error("Error Extracting Resume Information" . $e->getMessage());
+            return [
+                'summary' => '',
+                'skills' => '',
+                'experience' => '',
+                'education' => ''
+            ];
         }
     }
 
+    public function analyzeResume($jobVacancy, $resumeData)
+    {
+        try {
+            $jobDetails = json_encode([
+                'job_title' => $jobVacancy->title,
+                'job_description' => $jobVacancy->description,
+                'job_location' => $jobVacancy->location,
+                'job_type' => $jobVacancy->type,
+                'job_salary' => $jobVacancy->salary
+            ]);
+
+            $resumeDetails = json_encode($resumeData);
+
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+            ])->post('https://openrouter.ai/api/v1/chat/completions', [
+                        'model' => 'mistralai/mistral-7b-instruct',
+                        'messages' => [
+                            [
+                                'role' => 'system',
+                                'content' => "You are an expert HR professional and job recruiter. You are given a job vacancy and a resume.
+                                Your task is to analyze the resume and determine if the candidate is a good fit for the job.
+                                The output should be in JSON format.
+                                Provide a score from 0 to 100 for the candidate's suitability for the job and a detaild feedback as a string.
+                                Response should only be JSON that has the following keys: 'aiGeneratedScore' , 'aiGeneratedFeedback' 
+                                aiGeneratedFeedback should be detailed and specific to the job and the candidate's resume"
+                            ],
+                            [
+                                'role' => 'user',
+                                'content' => "Please evaluate this job application. JobDetails:{$jobDetails}. Resume Details:{$resumeDetails}"
+                            ]
+                        ],
+                        'temperature' => 0.1
+                    ]);
+            $result = $response['choices'][0]['message']['content'] ?? '';
+            Log::debug('OpenRouter evaluation Response: ' . $result);
+
+            $parsedResult = json_decode($result, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error('Failed to parse OpenRouter response: ' . json_last_error_msg());
+                throw new \Exception('Failed to parse OpenRouter response');
+            }
+
+            if (!isset($parsedResult['aiGeneratedScore']) || !isset($parsedResult['aiGeneratedFeedback'])) {
+                Log::error('Missing required keys in the parsed result.');
+                throw new \Exception('Missing required keys in the parsed result');
+            }
+
+            return [
+                'aiGeneratedScore' => $parsedResult['aiGeneratedScore'],
+                'aiGeneratedFeedback' => $parsedResult['aiGeneratedFeedback']
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Error analyzing resume: ' . $e->getMessage());
+            return [
+                'aiGeneratedScore' => 0,
+                'aiGeneratedFeedback' => "An error occurred while analyzing the resume. Please try again later."
+            ];
+        }
+    }
     private function extractTextFromPdf(string $fileUrl)
     {
         //Spatie PDF extract text
