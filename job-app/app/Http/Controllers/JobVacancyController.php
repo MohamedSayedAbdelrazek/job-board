@@ -47,7 +47,7 @@ class JobVacancyController extends Controller
         $fileUrl=config('filesystems.disks.cloud.url').'/'.$path;
 
         //TODO Extract information from the resume
-        $extractedInfo=$this->resumeAnalysisService->extractResumeInformation(fileUrl: $fileUrl);
+        $extractedInfo=$this->resumeAnalysisService->extractResumeInformation( $fileUrl);
         
         $resume=Resume::create([
             'fileName'=>$originalFileName,
@@ -59,8 +59,8 @@ class JobVacancyController extends Controller
                 'email'=>auth()->user()->email
             ]),
             'summary'=>$extractedInfo['summary'],
-            'skills'=>$extractedInfo['skills'],
-            'experience'=>$extractedInfo['experience'],
+            'skills' => json_encode($extractedInfo['skills']),
+            'experience' => json_encode($extractedInfo['experience'] ),
             'education'=>$extractedInfo['education']
         ]);
         $resumeId=$resume->id;
