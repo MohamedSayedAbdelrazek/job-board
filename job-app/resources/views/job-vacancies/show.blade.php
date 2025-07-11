@@ -144,7 +144,7 @@
                                     </li>
                                     <li class="flex justify-between">
                                         <span class="text-gray-400">Category</span>
-                                        <span class="text-white">{{ $jobVacancy->category->name ?? 'N/A' }}</span>
+                                        <span class="text-white">{{ $jobVacancy->jobCategory->name ?? 'N/A' }}</span>
                                     </li>
                                 </ul>
                             </div>

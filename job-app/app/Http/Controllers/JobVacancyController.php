@@ -20,6 +20,15 @@ class JobVacancyController extends Controller
     {
         $jobVacancy = JobVacancy::findOrFail($id);
 
+        //@MAGIC
+        //user has applied to this job ? do not increase the view_count
+        if ($jobVacancy->jobApplications->contains('userId', auth()->id())) {
+            return view('job-vacancies.show', compact('jobVacancy'));
+        }
+        $jobVacancy->increment('view_count');
+
+        //@TODO if the user enter to the same job in the same session many times => don't Increase the view count
+
         return view('job-vacancies.show', compact('jobVacancy'));
     }
 
