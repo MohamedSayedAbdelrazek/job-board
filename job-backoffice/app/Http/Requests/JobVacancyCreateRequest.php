@@ -31,7 +31,8 @@ class JobVacancyCreateRequest extends FormRequest
             "type" =>"required|string|max:255",
             "companyId" => "required|exists:companies,id",
             "jobCategoryId" => "required|exists:job_categories,id",
-            "description" => "required|string"
+            "description" => "required|string",
+            "required_skills" => "required|string",
         ];
     }
 
@@ -63,5 +64,17 @@ class JobVacancyCreateRequest extends FormRequest
         'description.required' => 'The job description is required.',
         'description.string' => 'The job description must be a string.',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        //@MAGIC Laravel calls this method automatically as part of its request lifecycle, right before validation begins.
+        // Trim skills and remove empty values
+        if ($this->required_skills) {
+            $skills = array_filter(array_map('trim', explode(',', $this->required_skills)));
+            $this->merge([
+                'required_skills' => json_encode($skills) // Convert to JSON here
+            ]);
+        }
     }
 }
