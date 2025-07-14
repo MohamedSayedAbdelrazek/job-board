@@ -16,9 +16,9 @@
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-            <div class="relative" x-data="{showPassword:false}">
+            <div class="relative" x-data="{showPassword:true}">
                 <x-text-input id="password" class="block mt-1 w-full" name="password" required
-                    autocomplete="current-password" x-bind:type="showPassword? 'text':'password'" />
+                    autocomplete="current-password" x-bind:type="showPassword? 'password':'text'" />
 
                 <button type="button" @click="showPassword=!showPassword"
                     class="absolute inset-y-0 right-2 flex items-center text-gray-500">

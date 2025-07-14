@@ -47,10 +47,10 @@
 
                         
                     {{-- Password --}}
-                    <div x-data="{ showPassword: false }">
+                    <div x-data="{ showPassword: true }">
                         <label for="user_password" class="block text-sm font-medium text-gray-700 mb-1">🔑 Change User Password</label>
                         <div class="relative">
-                            <input :type="showPassword ? 'text' : 'password'" name="user_password" id="user_password"
+                            <input :type="showPassword ? 'password' : 'text'" name="user_password" id="user_password"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                    placeholder="Enter password" required>
 

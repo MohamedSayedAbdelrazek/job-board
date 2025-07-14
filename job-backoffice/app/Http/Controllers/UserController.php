@@ -41,7 +41,7 @@ class UserController extends Controller
         //
         $user=User::findOrFail($id);
         $user->update([
-            'password'=>Hash::make($request->input('password')) ,
+            'password'=>Hash::make($request->input('user_password')) ,
         ]);
 
         return redirect()->route('users.index')->with('success','User Updated Successfully');
