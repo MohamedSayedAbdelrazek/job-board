@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\JobApplicationUpdateRequest;
 use App\Models\JobApplication;
 use App\Models\JobVacancy;
+use App\Notifications\JobApplicationStatusUpdated;
 use Illuminate\Http\Request;
 
 class JobApplicationController extends Controller
@@ -56,6 +57,10 @@ class JobApplicationController extends Controller
        $jobApplication->update([
         'status'=> $request->input('status')
        ]);
+       
+       if(in_array($jobApplication->status,['Accepted','Rejected'])) {
+          $jobApplication->user->notify(new JobApplicationStatusUpdated($jobApplication->status,$jobApplication->jobVacancy->title));
+       }
        
         if($request->query('redirectToList')==true) {
                 return redirect()->route('job-applications.show',$id)->with('success','Company Updated Successfully!');
