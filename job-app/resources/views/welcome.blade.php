@@ -6,9 +6,8 @@
              x-transition:enter="transition ease-out duration-700"
              x-transition:enter-start="opacity-0 scale-90"
              x-transition:enter-end="opacity-100 scale-100">
-            <span class="text-sm font-semibold text-white/90 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-5 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
-                🚀 Shaghalni
-            </span>
+            <x-application-logo class="w-20 h-auto fill-current text-gray-800" />
+            
         </div>
     </div>
 
