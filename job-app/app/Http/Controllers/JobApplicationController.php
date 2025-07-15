@@ -13,20 +13,55 @@ use Illuminate\View\View;
 class JobApplicationController extends Controller
 {
     //
-    public function index () 
+    public function index(Request $request)
     {
-        $statusCounts=[];
-        $statusCounts['Pending']=JobApplication::where('userId',auth()->user()->id)
-                                                ->where('status','Pending')->count();
+        $query = JobApplication::where('userId', auth()->id());
 
-        $statusCounts['Accepted']=JobApplication::where('userId',auth()->user()->id)
-                                                ->where('status','Accepted')->count();
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        $jobApplications = $query->latest()->paginate(10);
 
-        $statusCounts['Rejected']=JobApplication::where('userId',auth()->user()->id)
-                                                ->where('status','Rejected')->count();
+        if ($request->has('status') && $request->status !== null) {
+            if ($request->status == "Pending") {
+                $statusCounts = [
+                    'Pending' => $jobApplications->count(),
+                    'Accepted' => 0,
+                    'Rejected' => 0,
+                ];
+            } else if ($request->status == "Accepted") {
+                $statusCounts = [
+                    'Pending' => 0,
+                    'Accepted' => $jobApplications->count(),
+                    'Rejected' => 0,
+                ];
+            } else {
+                $statusCounts = [
+                    'Pending' => 0,
+                    'Accepted' => 0,
+                    'Rejected' => $jobApplications->count(),
+                ];
+            }
 
-        $jobApplications=JobApplication::where('userId',auth()->user()->id)->latest()->paginate(10);
-        
-        return view('job-applications.index',compact('jobApplications','statusCounts'));
+        } else {
+            //@MAGIC
+            $statusCounts = JobApplication::where('userId', auth()->id())
+                ->select('status', \DB::raw('count(*) as count'))
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->toArray();
+
+            $statusCounts = array_merge([
+                'Pending' => 0,
+                'Accepted' => 0,
+                'Rejected' => 0,
+            ], $statusCounts);
+        }
+
+
+
+
+
+        return view('job-applications.index', compact('jobApplications', 'statusCounts'));
     }
 }

@@ -82,18 +82,23 @@
                     </h3>
                     <div class="relative">
                         <!--@TODO redirect to the same page but show only the status chosen-->
-                        <select class="appearance-none bg-gray-800 border border-gray-700 text-white rounded-lg pl-4 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                            <option>All Statuses</option>
-                            <option>Pending</option>
-                            <option>Accepted</option>
-                            <option>Rejected</option>
+                        <form action="{{ url()->current() }}" method="get">
+                        <select name="status" onchange="this.form.submit()"
+                         class="appearance-none bg-gray-800 border border-gray-700 text-white rounded-lg pl-4 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" >
+                            <option value="" {{ request('status')==null??'selected'}}>All Statuses</option>
+                            <option value="Pending"  {{ request('status')=='Pending'?'selected':'' }}>Pending</option>
+                            <option value="Accepted" {{ request('status')=='Accepted'?'selected':'' }}>Accepted</option>
+                            <option value="Rejected" {{ request('status')=='Rejected'?'selected':'' }}>Rejected</option>
                         </select>
+                        </form>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                             </svg>
                         </div>
+
                     </div>
+
                 </div>
 
                 <div class="divide-y divide-gray-800">
