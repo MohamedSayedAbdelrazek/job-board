@@ -84,6 +84,7 @@ class ResumeAnalysisService
             $jobDetails = json_encode([
                 'job_title' => $jobVacancy->title,
                 'job_description' => $jobVacancy->description,
+                'required_skills' => $jobVacancy->required_skills,
                 'job_location' => $jobVacancy->location,
                 'job_type' => $jobVacancy->type,
                 'job_salary' => $jobVacancy->salary
@@ -99,16 +100,33 @@ class ResumeAnalysisService
                         'messages' => [
                             [
                                 'role' => 'system',
-                                'content' => "You are an expert HR professional and job recruiter. You are given a job vacancy and a resume.
-                                Your task is to analyze the resume and determine if the candidate is a good fit for the job.
-                                The output should be in JSON format.
-                                Provide a score from 0 to 100 for the candidate's suitability for the job and a detaild feedback as a string.
-                                Response should only be JSON that has the following keys: 'aiGeneratedScore' , 'aiGeneratedFeedback' 
-                                aiGeneratedFeedback should be detailed and specific to the job and the candidate's resume"
+                                'content' => "You are an experienced technical recruiter. 
+                                                You will receive a job posting and a candidate's resume. 
+                                                Your job is to compare the resume directly against the job requirements — especially required skills.
+
+                                                Your evaluation should be based on **skills match**, **relevant experience**, and **overall fit**.
+
+                                                Return ONLY a JSON with the following format:
+
+                                                {
+                                                \"aiGeneratedScore\": <number from 0 to 100>,
+                                                \"aiGeneratedFeedback\": \"<detailed feedback>\"
+                                                }
+
+                                                Scoring Criteria (strict):
+                                                - 90-100: Excellent match (all key skills + direct experience)
+                                                - 70-89: Good match (most skills match, some gaps)
+                                                - 40-69: Weak match (many skills missing)
+                                                - 0-39: Poor match (no relevant experience or skills)
+
+                                                ❗ If the resume lacks most or all required skills, the score should be below 40.
+
+                                                Be honest, concise, and objective."
                             ],
                             [
                                 'role' => 'user',
-                                'content' => "Please evaluate this job application. JobDetails:{$jobDetails}. Resume Details:{$resumeDetails}"
+                                'content' => "Please evaluate this job application. 
+                                JobDetails:{$jobDetails}. Resume Details:{$resumeDetails}"
                             ]
                         ],
                         'temperature' => 0.1
