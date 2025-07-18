@@ -2,8 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Mail\ApplicationStatusMail;
+use App\Models\JobApplication;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Mail;
 
 class SendStatusEmailJob implements ShouldQueue
 {
@@ -12,9 +15,11 @@ class SendStatusEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public $jobApplication;
+    public function __construct(JobApplication $jobApplication)
     {
         //
+        $this->jobApplication = $jobApplication;
     }
 
     /**
@@ -23,5 +28,8 @@ class SendStatusEmailJob implements ShouldQueue
     public function handle(): void
     {
         //
+        Mail::to($this->jobApplication->user->email)->send(
+            new ApplicationStatusMail($this->jobApplication)
+        );
     }
 }
