@@ -24,9 +24,9 @@ class SendStatusUpdateEmail
     public function handle(ApplicationStatusUpdated $event): void
     {
         //
-        //dispatch(new SendStatusEmailJob($event->jobApplication));
+        dispatch(new SendStatusEmailJob($event->jobApplication));
 
-        Mail::to($event->jobApplication->user->email)
-        ->send(new \App\Mail\ApplicationStatusMail($event->jobApplication));
+        // Mail::to($event->jobApplication->user->email)
+        // ->send(new \App\Mail\ApplicationStatusMail($event->jobApplication));
     }
 }

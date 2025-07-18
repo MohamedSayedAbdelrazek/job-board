@@ -28,8 +28,5 @@ class SendStatusEmailJob implements ShouldQueue
     public function handle(): void
     {
         //
-        Mail::to($this->jobApplication->user->email)->send(
-            new ApplicationStatusMail($this->jobApplication)
-        );
     }
 }
