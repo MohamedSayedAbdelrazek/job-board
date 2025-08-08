@@ -65,7 +65,7 @@ class JobApplicationController extends Controller
        }
        
         if($request->query('redirectToList')==true) {
-                return redirect()->route('job-applications.show',$id)->with('success','Company Updated Successfully!');
+                return redirect()->route('job-applications.show',$id)->with('success','Applicant Status Updated Successfully!');
         }
 
        return redirect()->route('job-applications.index')->with('success','Applicant Status Updated Successfully.');

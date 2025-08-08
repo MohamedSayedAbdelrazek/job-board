@@ -11,6 +11,9 @@
         </div>
     </div>
 
+  <div id="react-root"></div>
+
+
     <!-- Heading -->
     <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 500)">
         <div x-cloak x-show="show"
@@ -25,7 +28,6 @@
             </h1>
         </div>
     </div>
-
     <!-- Subheading -->
     <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 700)">
         <div x-cloak x-show="show"

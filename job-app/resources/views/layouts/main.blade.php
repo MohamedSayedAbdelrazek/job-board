@@ -17,7 +17,7 @@
     </style>
 
     <!-- Styles / Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js','resources/js/react-app.jsx'])
 </head>
 
 <body class="bg-black text-white min-h-screen flex items-center justify-center relative overflow-hidden">
